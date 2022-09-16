@@ -1,15 +1,12 @@
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-
 
 public class FileLoggerConfiguration {
-    protected static File filePath;
-    protected static LoggingLevel level;
-    protected static byte maxSizeFile;
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
+    private File filePath;
+    private LoggingLevel level;
+    private byte maxSizeFile;
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
     public FileLoggerConfiguration(String nameFile, LoggingLevel level, byte maxSizeFile) {
         filePath = new File("src\\" + nameFile);
@@ -17,7 +14,23 @@ public class FileLoggerConfiguration {
         this.maxSizeFile = maxSizeFile;
     }
 
-    public static String format(String msg,LoggingLevel level) {
+    public File getFilePath() {
+        return filePath;
+    }
+
+    public LoggingLevel getLevel() {
+        return level;
+    }
+
+    public byte getMaxSizeFile() {
+        return maxSizeFile;
+    }
+
+    public SimpleDateFormat getTimeFormat() {
+        return timeFormat;
+    }
+
+    public String format(String msg, LoggingLevel level) {
         return "[" +
                 timeFormat.format(new Date()) +
                 "]" +
@@ -30,4 +43,3 @@ public class FileLoggerConfiguration {
                 "] ";
     }
 }
-
