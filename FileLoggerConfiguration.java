@@ -1,23 +1,38 @@
-import java.io.File;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
+public class FileLoggerConfiguration implements LoggerConfiguration {
+    private Path filePath;
+    private LoggingLevel level;
+    private byte maxSizeFile;
+    private String fileName;
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 
-public class FileLoggerConfiguration {
-    protected static File filePath;
-    protected static LoggingLevel level;
-    protected static byte maxSizeFile;
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
-
-    public FileLoggerConfiguration(String nameFile, LoggingLevel level, byte maxSizeFile) {
-        filePath = new File("src\\" + nameFile);
+    public FileLoggerConfiguration(Path filePath, LoggingLevel level, byte maxSizeFile, String fileName) {
+        this.filePath = filePath;
         this.level = level;
         this.maxSizeFile = maxSizeFile;
+        this.fileName = fileName;
     }
 
-    public static String format(String msg,LoggingLevel level) {
+    public Path getFilePath() {
+        return filePath;
+    }
+
+    public LoggingLevel getLevel() {
+        return level;
+    }
+
+    public byte getMaxSizeFile() {
+        return maxSizeFile;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String format(String msg, LoggingLevel level) {
         return "[" +
                 timeFormat.format(new Date()) +
                 "]" +
@@ -30,4 +45,3 @@ public class FileLoggerConfiguration {
                 "] ";
     }
 }
-

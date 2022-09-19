@@ -1,12 +1,19 @@
-
-
 public class Test {
     public static void main(String[] args) throws Exception {
-        FileLoggerConfiguration fileLoggerConfiguration = new FileLoggerConfiguration("logger.txt",LoggingLevel.INFO, (byte) 100);
 
-        FileLogger logger = new FileLogger(fileLoggerConfiguration);
-
-        logger.info("Info log");
+        ConfigurationLoader fileLoggerConfigurationLoader = new FileLoggerConfigurationLoader();
+        LoggerConfiguration load = ((FileLoggerConfigurationLoader) fileLoggerConfigurationLoader).load("src\\file_config.txt");
+        FileLogger logger = new FileLogger(load);
         logger.debug("Debug log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
+        logger.info("Info log");
     }
 }

@@ -1,56 +1,55 @@
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+public class FileLogger implements Logger {
+    private final LoggerConfiguration configuration;
+    protected File fileLog;
 
-public class FileLogger implements AutoCloseable {
-    private final OutputStream outputStream;
-
-    public FileLogger(FileLoggerConfiguration configuration) {
-        try {
-            outputStream = new FileOutputStream(FileLoggerConfiguration.filePath, true);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public FileLogger(LoggerConfiguration configuration) {
+        this.configuration = configuration;
+        fileLog = createFile(configuration);
     }
 
-    public void info(String msg) {
-        if (FileLoggerConfiguration.level.ordinal() >= LoggingLevel.INFO.ordinal()) {
-            String log = FileLoggerConfiguration.format(msg,LoggingLevel.INFO);
+    public void info(String msg) throws IOException {
+        if (configuration.getLevel().ordinal() >= LoggingLevel.INFO.ordinal()) {
+            String log = configuration.format(msg, LoggingLevel.INFO);
             writeToFile(log);
         }
     }
 
-    public void debug(String msg) {
-        if (FileLoggerConfiguration.level.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-            String log = FileLoggerConfiguration.format(msg,LoggingLevel.DEBUG);
+    public void debug(String msg) throws IOException {
+        if (configuration.getLevel().ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+            String log = configuration.format(msg, LoggingLevel.DEBUG);
             writeToFile(log);
         }
     }
 
-    private void writeToFile(String msg) {
-        try {
-            if (FileLoggerConfiguration.filePath.length() < FileLoggerConfiguration.maxSizeFile) {
-                outputStream.write(msg.getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.flush();
-            } else {
-                throw new FileMaxSizeReachedException("Max size file: " + FileLoggerConfiguration.maxSizeFile
-                        + " File size: " + FileLoggerConfiguration.filePath.length() + "byte"
-                        + " File path: " + FileLoggerConfiguration.filePath + "byte");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private void writeToFile(String msg) throws IOException {
+        if(fileLog.length() >= configuration.getMaxSizeFile()){
+            fileLog = createFile(configuration);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileLog, true));
+            writer.write(msg);
+            writer.write("\n");
+            writer.close();
+        } else {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileLog, true));
+            writer.write(msg);
+            writer.write("\n");
+            writer.close();
         }
     }
 
-    @Override
-    public void close() {
+    private File createFile(LoggerConfiguration configuration) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss");
+        String date = dateFormat.format(new Date());
+        File file = new File(configuration.getFilePath() + "\\" + configuration.getFileName() + date + ".txt");
         try {
-            outputStream.close();
+            file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return file;
     }
 }
