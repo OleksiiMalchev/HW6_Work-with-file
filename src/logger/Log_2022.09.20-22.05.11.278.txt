@@ -1,0 +1,2 @@
+[22:05:11][INFO] Message:[info log10] 
+[22:05:11][INFO] Message:[info log11] 
