@@ -13,10 +13,9 @@ public class FileLogger implements Logger {
     }
 
     public void info(String msg) {
-        if (configuration.getLevel().ordinal() >= LoggingLevel.INFO.ordinal()) {
-            String log = configuration.format(msg, LoggingLevel.INFO);
-            writeToFile(log);
-        }
+        configuration.getLevel();
+        String log = configuration.format(msg, LoggingLevel.INFO);
+        writeToFile(log);
     }
 
     public void debug(String msg) {
