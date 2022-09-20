@@ -1,0 +1,4 @@
+FILE:src/logger
+LEVEL:DEBUG
+MAX-SIZE:100
+FORMAT:Log_
